@@ -39,7 +39,8 @@ def predict_decision(input_data):
     return prediction[0], prediction_proba[0][1]
 
 # Streamlit app layout
-st.title('Violence Risk Prediction App')
+st.title('M.A.R.I.A.')
+st.write('Violence Risk Prediction App')
 
 st.write("""
 This app predicts whether a protective measure will be granted based on the input data.
