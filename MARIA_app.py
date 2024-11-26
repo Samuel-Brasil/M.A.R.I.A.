@@ -11,7 +11,7 @@ model_filename = 'best_model.joblib'
 
 if not os.path.exists(model_filename):
     with st.spinner('Downloading model...'):
-        url = 'https://github.com/yourusername/yourrepo/releases/download/v1.0/best_model.joblib'
+        url = 'https://github.com/Samuel-Brasil/M.A.R.I.A./releases/download/v1.3/best_model.joblib'
         response = requests.get(url, stream=True)
         if response.status_code == 200:
             with open(model_filename, 'wb') as f:
