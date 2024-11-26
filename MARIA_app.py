@@ -40,7 +40,7 @@ def predict_decision(input_data):
 
 # Streamlit app layout
 st.title('M.A.R.I.A.')
-st.write('# Modelagem da Avaliação de Risco com Inteligência Artificial')
+st.write('### Modelagem da Avaliação de Risco com Inteligência Artificial')
 st.write('Violence Risk Prediction App')
 
 st.write("""
