@@ -2,11 +2,32 @@
 
 import streamlit as st
 import joblib
+import os
 import numpy as np
 import pandas as pd
+import requests
+
+model_filename = 'best_model.joblib'
+
+if not os.path.exists(model_filename):
+    with st.spinner('Downloading model...'):
+        url = 'https://github.com/yourusername/yourrepo/releases/download/v1.0/best_model.joblib'
+        response = requests.get(url, stream=True)
+        if response.status_code == 200:
+            with open(model_filename, 'wb') as f:
+                for chunk in response.iter_content(chunk_size=8192):
+                    if chunk:
+                        f.write(chunk)
+            st.success('Model downloaded successfully.')
+        else:
+            st.error('Failed to download the model.')
+            st.stop()
+
+# Load the model
+model = joblib.load(model_filename)
 
 # Load the trained model
-model = joblib.load('best_model.joblib')
+#model = joblib.load('best_model.joblib')
 
 # Define a function for prediction
 def predict_decision(input_data):
