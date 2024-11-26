@@ -39,7 +39,7 @@ def predict_decision(input_data):
     return prediction[0], prediction_proba[0][1]
 
 # Streamlit app layout
-st.set_page_config(layout="wide")
+# st.set_page_config(layout="wide")
 st.title('M.A.R.I.A.')
 st.write('### Modelagem da Avaliação de Risco com Inteligência Artificial')
 st.write('Violence Risk Prediction App')
