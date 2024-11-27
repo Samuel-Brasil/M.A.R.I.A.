@@ -36,7 +36,6 @@ def predict_decision(input_data):
 # Layout do aplicativo Streamlit
 st.title('M.A.R.I.A.')
 st.write('### Modelagem da Avaliação de Risco com Inteligência Artificial')
-st.write('Modeling Risk Assessment with Artificial Intelligence')
 
 st.write("""
 This app predicts whether a protective measure will be granted based on the input data.
@@ -301,6 +300,9 @@ dependencia_financeira = st.radio(
     ["Sim", "Não"]
 )
 input_data['dependencia_financeira'] = 1 if dependencia_financeira == "Sim" else 0
+
+# Bloco 1: Identificação das Partes
+st.header("Predição")
 
 # Realiza a previsão ao clicar no botão
 if st.button('Prever'):
