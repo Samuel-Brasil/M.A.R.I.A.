@@ -21,10 +21,10 @@ st.title("Formulário Nacional de Avaliação de Risco - Violência Doméstica")
 st.header("Identificação das Partes")
 delegacia = st.text_input("Delegacia de Polícia")
 nome_vitima = st.text_input("Nome da vítima")
-idade_vitima = st.number_input("Idade da vítima", min_value=0, step=1)
+idade_vitima = st.number_input("Idade da vítima", min_value=0, value=30, step=1)
 escolaridade_vitima = st.selectbox(
     "Escolaridade da vítima",
-    ["Não há", "Fundamental", "Médio", "Superior", "Pós-graduação", "Mestrado", "Doutorado"]
+    ["Nihil", "Fundamental", "Médio", "Superior", "Pós-graduação", "Mestrado", "Doutorado"]
 )
 nacionalidade_vitima = st.text_input("Nacionalidade da vítima")
 
@@ -33,7 +33,7 @@ idade_agressor = st.number_input("Idade do(a) agressor(a)", min_value=0, value=3
 
 escolaridade_agressor = st.selectbox(
     "Escolaridade do(a) agressor(a)",
-    ["Não há", "Fundamental", "Médio", "Superior", "Pós-graduação", "Mestrado", "Doutorado"]
+    ["Nihil", "Fundamental", "Médio", "Superior", "Pós-graduação", "Mestrado", "Doutorado"]
 )
 nacionalidade_agressor = st.text_input("Nacionalidade do(a) agressor(a)")
 vinculo = st.text_input("Vínculo entre a vítima e o(a) agressor(a)")
