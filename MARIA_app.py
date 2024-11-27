@@ -43,23 +43,23 @@ This app predicts whether a protective measure will be granted based on the inpu
 
 # Bloco 1: Identificação das Partes
 st.header("Identificação das Partes")
-delegacia = st.text_input("Delegacia de Polícia")
-nome_vitima = st.text_input("Nome da vítima")
+# delegacia = st.text_input("Delegacia de Polícia")
+# nome_vitima = st.text_input("Nome da vítima")
 idade_vitima = st.number_input("Idade da vítima", min_value=0, value=30, step=1)
 escolaridade_vitima = st.selectbox(
     "Escolaridade da vítima",
     ["Nihil", "Fundamental", "Médio", "Superior", "Pós-graduação", "Mestrado", "Doutorado"]
 )
-nacionalidade_vitima = st.text_input("Nacionalidade da vítima")
+# nacionalidade_vitima = st.text_input("Nacionalidade da vítima")
 
-nome_agressor = st.text_input("Nome do(a) agressor(a)")
+# nome_agressor = st.text_input("Nome do(a) agressor(a)")
 idade_agressor = st.number_input("Idade do(a) agressor(a)", min_value=0, value=30, step=1)
 
 escolaridade_agressor = st.selectbox(
     "Escolaridade do(a) agressor(a)",
     ["Nihil", "Fundamental", "Médio", "Superior", "Pós-graduação", "Mestrado", "Doutorado"]
 )
-nacionalidade_agressor = st.text_input("Nacionalidade do(a) agressor(a)")
+# nacionalidade_agressor = st.text_input("Nacionalidade do(a) agressor(a)")
 vinculo = st.text_input("Vínculo entre a vítima e o(a) agressor(a)")
 data = st.date_input("Data")
 
