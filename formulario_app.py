@@ -29,7 +29,8 @@ escolaridade_vitima = st.selectbox(
 nacionalidade_vitima = st.text_input("Nacionalidade da vítima")
 
 nome_agressor = st.text_input("Nome do(a) agressor(a)")
-idade_agressor = st.number_input("Idade do(a) agressor(a)", min_value=0, step=1)
+idade_agressor = st.number_input("Idade do(a) agressor(a)", min_value=0, value=30, step=1)
+
 escolaridade_agressor = st.selectbox(
     "Escolaridade do(a) agressor(a)",
     ["Não há", "Fundamental", "Médio", "Superior", "Pós-graduação", "Mestrado", "Doutorado"]
