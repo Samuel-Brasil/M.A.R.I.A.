@@ -42,7 +42,7 @@ This app predicts whether a protective measure will be granted based on the inpu
 """)
 
 # Bloco 1: Identificação das Partes
-st.header("Identificação das Partes")
+st.header("Informação das Partes")
 # delegacia = st.text_input("Delegacia de Polícia")
 # nome_vitima = st.text_input("Nome da vítima")
 idade_vitima = st.number_input("Idade da vítima", min_value=0, value=30, step=1)
@@ -86,7 +86,7 @@ input_data['escolaridade_agressor'] = escolaridade_mapping[escolaridade_agressor
 # Bloco I: Sobre o Histórico de Violência
 st.header("Bloco I - Sobre o Histórico de Violência")
 ameacas = st.multiselect(
-    "O(A) agressor(a) já ameaçou você ou algum familiar?",
+    "O(A) agressor(a) já ameaçou a vítima ou algum familiar?",
     ["Sim, utilizando arma de fogo", "Sim, utilizando faca", "Sim, de outra forma", "Não"]
 )
 input_data['ameaca_arma_fogo'] = 1 if "Sim, utilizando arma de fogo" in ameacas else 0
@@ -95,7 +95,7 @@ input_data['ameaca_outra'] = 1 if "Sim, de outra forma" in ameacas else 0
 input_data['ameaca_nao'] = 1 if "Não" in ameacas else 0
 
 agressoes_fisicas = st.multiselect(
-    "O(A) agressor(a) já praticou alguma(s) destas agressões físicas contra você?",
+    "O(A) agressor(a) já praticou alguma(s) destas agressões físicas contra a vítima?",
     ["Queimadura", "Enforcamento", "Sufocamento", "Tiro", "Afogamento", 
      "Facada", "Paulada", "Nenhuma das agressões acima"]
 )
@@ -105,7 +105,7 @@ for ag in agressoes_fisicas_options:
     input_data[f"agressao_{ag.lower()}"] = 1 if ag in agressoes_fisicas else 0
 
 outros_agressoes = st.multiselect(
-    "O(A) agressor(a) já praticou alguma(s) destas outras agressões físicas contra você?",
+    "O(A) agressor(a) já praticou alguma(s) destas outras agressões físicas contra a vítima?",
     ["Socos", "Chutes", "Tapas", "Empurrões", "Puxões de Cabelo", "Nenhuma das agressões acima"]
 )
 outros_agressoes_options = ["Socos", "Chutes", "Tapas", "Empurrões", "Puxões de Cabelo", "Nenhuma das agressões acima"]
@@ -113,7 +113,7 @@ for ag in outros_agressoes_options:
     input_data[f"agressao_{ag.lower().replace(' ', '_')}"] = 1 if ag in outros_agressoes else 0
 
 obrigou_sexo = st.radio(
-    "O(A) agressor(a) já obrigou você a fazer sexo ou praticar atos sexuais contra sua vontade?",
+    "O(A) agressor(a) já obrigou a vítima a fazer sexo ou praticar atos sexuais contra sua vontade?",
     ["Sim", "Não"]
 )
 input_data['obrigou_sexo'] = 1 if obrigou_sexo == "Sim" else 0
@@ -122,22 +122,22 @@ comportamentos = st.multiselect(
     "O(A) agressor(a) já teve algum destes comportamentos?",
     [
         "Disse algo como: 'se não for minha, não será de mais ninguém'",
-        "Perturbou, perseguiu ou vigiou você nos locais em que frequenta",
-        "Proibiu você de visitar familiares ou amigos",
-        "Proibiu você de trabalhar ou estudar",
+        "Perturbou, perseguiu ou vigiou a vítima nos locais em que frequenta",
+        "Proibiu a vítima de visitar familiares ou amigos",
+        "Proibiu a vítima de trabalhar ou estudar",
         "Fez telefonemas ou enviou mensagens de forma insistente",
-        "Impediu você de acessar dinheiro ou bens",
+        "Impediu a vítima de acessar dinheiro ou bens",
         "Ciúmes excessivos e controle",
         "Nenhum dos comportamentos acima"
     ]
 )
 comportamentos_options = [
     "Disse algo como: 'se não for minha, não será de mais ninguém'",
-    "Perturbou, perseguiu ou vigiou você nos locais em que frequenta",
-    "Proibiu você de visitar familiares ou amigos",
-    "Proibiu você de trabalhar ou estudar",
+    "Perturbou, perseguiu ou vigiou a vítima nos locais em que frequenta",
+    "Proibiu a vítima de visitar familiares ou amigos",
+    "Proibiu a vítima de trabalhar ou estudar",
     "Fez telefonemas ou enviou mensagens de forma insistente",
-    "Impediu você de acessar dinheiro ou bens",
+    "Impediu a vítima de acessar dinheiro ou bens",
     "Ciúmes excessivos e controle",
     "Nenhum dos comportamentos acima"
 ]
@@ -146,7 +146,7 @@ for comp in comportamentos_options:
     input_data[f"comportamento_{key}"] = 1 if comp in comportamentos else 0
 
 ocorrencia_registrada = st.radio(
-    "Você já registrou ocorrência policial ou formulou pedido de medida protetiva?",
+    "A vítima já registrou ocorrência policial ou formulou pedido de medida protetiva?",
     ["Sim", "Não"]
 )
 input_data['ocorrencia_registrada'] = 1 if ocorrencia_registrada == "Sim" else 0
@@ -217,15 +217,15 @@ input_data['ameacou_nao'] = 1 if "Não" in ameacou_outras_pessoas else 0
 input_data['ameacou_nao_sei'] = 1 if "Não sei" in ameacou_outras_pessoas else 0
 
 # Bloco III: Sobre Você
-st.header("Bloco III - Sobre Você")
+st.header("Bloco III - Sobre a Vítima")
 separacao_recente = st.radio(
-    "Você se separou recentemente ou tentou se separar?",
+    "A vítima se separou recentemente ou tentou se separar?",
     ["Sim", "Não"]
 )
 input_data['separacao_recente'] = 1 if separacao_recente == "Sim" else 0
 
 tem_filhos = st.radio(
-    "Você tem filhos?",
+    "A vítima tem filhos?",
     ["Sim, com o agressor", "Sim, de outro relacionamento", "Não"]
 )
 input_data['tem_filhos_com_agressor'] = 1 if tem_filhos == "Sim, com o agressor" else 0
@@ -248,19 +248,19 @@ if tem_filhos != "Não":
     input_data['filhos_deficiencia'] = 1 if filhos_deficiencia == "Sim" else 0
 
     conflito_guarda = st.radio(
-        "Você vive conflito com o(a) agressor(a) sobre guarda, visitas ou pensão?",
+        "A vítima vive conflito com o(a) agressor(a) sobre guarda, visitas ou pensão?",
         ["Sim", "Não"]
     )
     input_data['conflito_guarda'] = 1 if conflito_guarda == "Sim" else 0
 
     filhos_presenciaram = st.radio(
-        "Seus filhos já presenciaram violência?",
+        "Os filhos da vítima já presenciaram violência?",
         ["Sim", "Não"]
     )
     input_data['filhos_presenciaram'] = 1 if filhos_presenciaram == "Sim" else 0
 
 violencia_gravidez = st.radio(
-    "Você sofreu violência durante a gravidez ou pós-parto?",
+    "A vítima sofreu violência durante a gravidez ou pós-parto?",
     ["Sim", "Não"]
 )
 input_data['violencia_gravidez'] = 1 if violencia_gravidez == "Sim" else 0
@@ -272,13 +272,13 @@ novo_relacionamento = st.radio(
 input_data['novo_relacionamento'] = 1 if novo_relacionamento == "Sim" else 0
 
 deficiencia_vulnerabilidade = st.radio(
-    "Você possui deficiência ou doença limitante?",
+    "A vítima possui deficiência ou doença limitante?",
     ["Sim", "Não"]
 )
 input_data['deficiencia_vulnerabilidade'] = 1 if deficiencia_vulnerabilidade == "Sim" else 0
 
 cor_raca = st.selectbox(
-    "Com qual cor/raça você se identifica?",
+    "Com qual cor/raça a vítima se identifica?",
     ["Branca", "Preta", "Parda", "Amarela/Oriental", "Indígena", "Não informada"]
 )
 cor_raca_options = ["Branca", "Preta", "Parda", "Amarela/Oriental", "Indígena", "Não informada"]
@@ -288,7 +288,7 @@ for cor in cor_raca_options:
 # Bloco IV: Outras Informações
 st.header("Bloco IV - Outras Informações")
 bairro_risco = st.radio(
-    "Você considera morar em área de risco?",
+    "A vítima considera morar em área de risco?",
     ["Sim", "Não", "Não sei"]
 )
 input_data['bairro_risco_sim'] = 1 if bairro_risco == "Sim" else 0
@@ -296,7 +296,7 @@ input_data['bairro_risco_nao'] = 1 if bairro_risco == "Não" else 0
 input_data['bairro_risco_nao_sei'] = 1 if bairro_risco == "Não sei" else 0
 
 dependencia_financeira = st.radio(
-    "Você é dependente financeiramente do(a) agressor(a)?",
+    "A vítima é dependente financeiramente do(a) agressor(a)?",
     ["Sim", "Não"]
 )
 input_data['dependencia_financeira'] = 1 if dependencia_financeira == "Sim" else 0
