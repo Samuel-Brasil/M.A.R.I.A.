@@ -143,9 +143,9 @@ deficiencia_vulnerabilidade = st.radio(
     "Você possui deficiência ou doença limitante?",
     ["Sim", "Não"]
 )
-cor_raca = st.radio(
+cor_raca = st.selectbox(
     "Com qual cor/raça você se identifica?",
-    ["Branca", "Preta", "Parda", "Amarela/Oriental", "Indígena"]
+    ["Branca", "Preta", "Parda", "Amarela/Oriental", "Indígena", "Não informada"]
 )
 
 # Bloco IV: Outras Informações Importantes
