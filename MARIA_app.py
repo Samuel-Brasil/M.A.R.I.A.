@@ -24,10 +24,21 @@ if not os.path.exists(model_filename):
 # Carrega o modelo
 model = joblib.load(model_filename)
 
+# Lista de features esperadas pelo modelo, na ordem correta
+expected_features = ['idade_vit', 'idade_agr', 'historico_ameaca', 'sexo_forcado', 'bo_mpu', 'frequente',
+                     'agr_alcool_drogas', 'agr_doenca_mental', 'agr_descumpriu_mpu', 'agr_suicidio',
+                     'agr_desempregado', 'agr_arma_fogo', 'agr_terceiro', 'vit_separacao_recente',
+                     'vit_guarda_pensao', 'vit_filho_assistiu', 'vit_violencia_gravidez',
+                     'vit_novo_relacionamento', 'vit_pne', 'moradia_violencia', 'dependencia_economica',
+                     'etnia_amarela/oriental', 'etnia_branca', 'etnia_indígena', 'etnia_parda', 'etnia_preta',
+                     'a_graves_Afogamento', 'a_graves_Enforcamento', 'a_graves_Facada', 'a_graves_Paulada',
+                     'a_graves_Queimadura', 'a_graves_Sufocamento', 'a_graves_Tiro', 'agressoes_Chutes',
+                     'agressoes_Empurrões', 'agressoes_puxoes_cabelo', 'agressoes_Socos', 'agressoes_Tapas']
+
 # Define a função de previsão
 def predict_decision(input_data):
-    # Converte os dados de entrada em um DataFrame
-    input_df = pd.DataFrame([input_data])
+    # Converte os dados de entrada em um DataFrame com as colunas na ordem correta
+    input_df = pd.DataFrame([input_data], columns=expected_features)
     # Faz a previsão
     prediction = model.predict(input_df)
     prediction_proba = model.predict_proba(input_df)
@@ -43,16 +54,15 @@ This app predicts whether a protective measure will be granted based on the inpu
 
 # Bloco 1: Identificação das Partes
 st.header("Informação das Partes")
-# Coleta das informações de idade
 idade_vitima = st.number_input("Idade da vítima", min_value=0, value=30, step=1)
 idade_agressor = st.number_input("Idade do(a) agressor(a)", min_value=0, value=30, step=1)
 vinculo = st.text_input("Vínculo entre a vítima e o(a) agressor(a)")
 data = st.date_input("Data")
 
-# Coleta dos dados para o modelo
-input_data = {}
+# Inicializa o dicionário de entrada com zeros para todas as features esperadas
+input_data = {feature: 0 for feature in expected_features}
 
-# Idades (ajustando os nomes das colunas)
+# Idades
 input_data['idade_vit'] = idade_vitima
 input_data['idade_agr'] = idade_agressor
 
@@ -62,73 +72,41 @@ ameacas = st.multiselect(
     "O(A) agressor(a) já ameaçou a vítima ou algum familiar?",
     ["Sim, utilizando arma de fogo", "Sim, utilizando faca", "Sim, de outra forma", "Não"]
 )
-
-# Mapeando para 'historico_ameaca' no dataset
 input_data['historico_ameaca'] = 1 if any(option != "Não" for option in ameacas) else 0
 
 # Agressões físicas graves
 agressoes_fisicas = st.multiselect(
     "O(A) agressor(a) já praticou alguma(s) destas agressões físicas contra a vítima?",
-    ["Queimadura", "Enforcamento", "Sufocamento", "Tiro", "Afogamento",
-     "Facada", "Paulada", "Nenhuma das agressões acima"]
+    ["Afogamento", "Enforcamento", "Facada", "Paulada", "Queimadura", "Sufocamento", "Tiro"]
 )
-
-# Inicializa todas as agressões graves como 0 (excluding 'a_graves_nenhuma')
-a_graves_features = [
-    'a_graves_Afogamento', 'a_graves_Enforcamento', 'a_graves_Facada',
-    'a_graves_Paulada', 'a_graves_Queimadura',
-    'a_graves_Sufocamento', 'a_graves_Tiro'
-]
-for feature in a_graves_features:
-    input_data[feature] = 0
-
-# Mapeia as agressões selecionadas
-if "Nenhuma das agressões acima" in agressoes_fisicas:
-    # Se "Nenhuma das agressões acima" foi selecionada, todas as agressões graves permanecem como 0
-    pass
-else:
-    mapping_agressoes_graves = {
-        "Afogamento": 'a_graves_Afogamento',
-        "Enforcamento": 'a_graves_Enforcamento',
-        "Facada": 'a_graves_Facada',
-        "Paulada": 'a_graves_Paulada',
-        "Queimadura": 'a_graves_Queimadura',
-        "Sufocamento": 'a_graves_Sufocamento',
-        "Tiro": 'a_graves_Tiro'
-    }
-    for ag in agressoes_fisicas:
-        if ag in mapping_agressoes_graves:
-            input_data[mapping_agressoes_graves[ag]] = 1
+mapping_agressoes_graves = {
+    "Afogamento": 'a_graves_Afogamento',
+    "Enforcamento": 'a_graves_Enforcamento',
+    "Facada": 'a_graves_Facada',
+    "Paulada": 'a_graves_Paulada',
+    "Queimadura": 'a_graves_Queimadura',
+    "Sufocamento": 'a_graves_Sufocamento',
+    "Tiro": 'a_graves_Tiro'
+}
+for ag in agressoes_fisicas:
+    if ag in mapping_agressoes_graves:
+        input_data[mapping_agressoes_graves[ag]] = 1
 
 # Outras agressões físicas
 outros_agressoes = st.multiselect(
     "O(A) agressor(a) já praticou alguma(s) destas outras agressões físicas contra a vítima?",
-    ["Socos", "Chutes", "Tapas", "Empurrões", "Puxões de Cabelo", "Nenhuma das agressões acima"]
+    ["Chutes", "Empurrões", "Puxões de Cabelo", "Socos", "Tapas"]
 )
-
-# Inicializa todas as outras agressões como 0 (excluding 'agressoes_nenhuma')
-agressoes_features = [
-    'agressoes_Chutes', 'agressoes_Empurrões',
-    'agressoes_puxoes_cabelo', 'agressoes_Socos', 'agressoes_Tapas'
-]
-for feature in agressoes_features:
-    input_data[feature] = 0
-
-# Mapeia as outras agressões selecionadas
-if "Nenhuma das agressões acima" in outros_agressoes:
-    # Se "Nenhuma das agressões acima" foi selecionada, todas as outras agressões permanecem como 0
-    pass
-else:
-    mapping_outros_agressoes = {
-        "Socos": 'agressoes_Socos',
-        "Chutes": 'agressoes_Chutes',
-        "Tapas": 'agressoes_Tapas',
-        "Empurrões": 'agressoes_Empurrões',
-        "Puxões de Cabelo": 'agressoes_puxoes_cabelo'
-    }
-    for ag in outros_agressoes:
-        if ag in mapping_outros_agressoes:
-            input_data[mapping_outros_agressoes[ag]] = 1
+mapping_outros_agressoes = {
+    "Chutes": 'agressoes_Chutes',
+    "Empurrões": 'agressoes_Empurrões',
+    "Puxões de Cabelo": 'agressoes_puxoes_cabelo',
+    "Socos": 'agressoes_Socos',
+    "Tapas": 'agressoes_Tapas'
+}
+for ag in outros_agressoes:
+    if ag in mapping_outros_agressoes:
+        input_data[mapping_outros_agressoes[ag]] = 1
 
 # Obrigação de sexo
 obrigou_sexo = st.radio(
@@ -155,17 +133,16 @@ input_data['frequente'] = 1 if ameacas_recorrentes == "Sim" else 0
 st.header("Bloco II - Sobre o(a) Agressor(a)")
 uso_abusivo = st.multiselect(
     "O(A) agressor(a) faz uso abusivo de álcool ou drogas?",
-    ["Sim, de álcool", "Sim, de drogas", "Não", "Não sei"]
+    ["Sim, de álcool", "Sim, de drogas"]
 )
-# Mapeando para 'agr_alcool_drogas' no dataset
-input_data['agr_alcool_drogas'] = 1 if any(option in ["Sim, de álcool", "Sim, de drogas"] for option in uso_abusivo) else 0
+input_data['agr_alcool_drogas'] = 1 if uso_abusivo else 0
 
 # Doença mental
 doenca_mental = st.radio(
     "O(A) agressor(a) tem doença mental comprovada?",
-    ["Sim, faz uso de medicação", "Sim, não faz uso de medicação", "Não", "Não sei"]
+    ["Sim", "Não"]
 )
-input_data['agr_doenca_mental'] = 1 if doenca_mental.startswith("Sim") else 0
+input_data['agr_doenca_mental'] = 1 if doenca_mental == "Sim" else 0
 
 # Descumpriu medida protetiva
 descumpriu_medida = st.radio(
@@ -184,23 +161,23 @@ input_data['agr_suicidio'] = 1 if tentou_suicidio == "Sim" else 0
 # Dificuldades financeiras
 dificuldades_financeiras = st.radio(
     "O(A) agressor(a) está desempregado ou tem dificuldades financeiras?",
-    ["Sim", "Não", "Não sei"]
+    ["Sim", "Não"]
 )
 input_data['agr_desempregado'] = 1 if dificuldades_financeiras == "Sim" else 0
 
 # Acesso a armas
 acesso_armas = st.radio(
     "O(A) agressor(a) tem acesso a armas de fogo?",
-    ["Sim", "Não", "Não sei"]
+    ["Sim", "Não"]
 )
 input_data['agr_arma_fogo'] = 1 if acesso_armas == "Sim" else 0
 
 # Ameaçou outras pessoas
 ameacou_outras_pessoas = st.multiselect(
     "O(A) agressor(a) já ameaçou ou agrediu outras pessoas ou animais?",
-    ["Filhos", "Outros familiares", "Outras pessoas", "Animais", "Não", "Não sei"]
+    ["Filhos", "Outros familiares", "Outras pessoas", "Animais"]
 )
-input_data['agr_terceiro'] = 1 if any(option in ["Filhos", "Outros familiares", "Outras pessoas", "Animais"] for option in ameacou_outras_pessoas) else 0
+input_data['agr_terceiro'] = 1 if ameacou_outras_pessoas else 0
 
 # Bloco III: Sobre a Vítima
 st.header("Bloco III - Sobre a Vítima")
@@ -210,41 +187,35 @@ separacao_recente = st.radio(
 )
 input_data['vit_separacao_recente'] = 1 if separacao_recente == "Sim" else 0
 
-tem_filhos = st.radio(
-    "A vítima tem filhos?",
-    ["Sim, com o agressor", "Sim, de outro relacionamento", "Não"]
+# Conflito sobre guarda ou pensão
+conflito_guarda = st.radio(
+    "A vítima vive conflito com o(a) agressor(a) sobre guarda, visitas ou pensão?",
+    ["Sim", "Não"]
 )
-# Não há coluna específica para 'tem_filhos', então não adicionamos ao input_data
+input_data['vit_guarda_pensao'] = 1 if conflito_guarda == "Sim" else 0
 
-if tem_filhos != "Não":
-    faixa_etaria = st.multiselect(
-        "Faixa etária dos filhos:",
-        ["0 a 11 anos", "12 a 17 anos", "A partir de 18 anos"]
-    )
-    filhos_presenciaram = st.radio(
-        "Os filhos da vítima já presenciaram violência?",
-        ["Sim", "Não"]
-    )
-    input_data['vit_filho_assistiu'] = 1 if filhos_presenciaram == "Sim" else 0
+# Filhos presenciaram violência
+filhos_presenciaram = st.radio(
+    "Os filhos da vítima já presenciaram violência?",
+    ["Sim", "Não"]
+)
+input_data['vit_filho_assistiu'] = 1 if filhos_presenciaram == "Sim" else 0
 
-    conflito_guarda = st.radio(
-        "A vítima vive conflito com o(a) agressor(a) sobre guarda, visitas ou pensão?",
-        ["Sim", "Não"]
-    )
-    input_data['vit_guarda_pensao'] = 1 if conflito_guarda == "Sim" else 0
-
+# Violência durante gravidez
 violencia_gravidez = st.radio(
     "A vítima sofreu violência durante a gravidez ou pós-parto?",
     ["Sim", "Não"]
 )
 input_data['vit_violencia_gravidez'] = 1 if violencia_gravidez == "Sim" else 0
 
+# Novo relacionamento
 novo_relacionamento = st.radio(
     "As ameaças aumentaram devido a um novo relacionamento?",
     ["Sim", "Não"]
 )
 input_data['vit_novo_relacionamento'] = 1 if novo_relacionamento == "Sim" else 0
 
+# Deficiência ou doença limitante
 deficiencia_vulnerabilidade = st.radio(
     "A vítima possui deficiência ou doença limitante?",
     ["Sim", "Não"]
@@ -254,35 +225,26 @@ input_data['vit_pne'] = 1 if deficiencia_vulnerabilidade == "Sim" else 0
 # Cor/Raça
 cor_raca = st.selectbox(
     "Com qual cor/raça a vítima se identifica?",
-    ["Branca", "Preta", "Parda", "Amarela/Oriental", "Indígena", "Não informada"]
+    ["Amarela/Oriental", "Branca", "Indígena", "Parda", "Preta"]
 )
-
-# Inicializa todas as etnias como 0
-etnia_features = [
-    'etnia_branca', 'etnia_preta', 'etnia_parda',
-    'etnia_amarela/oriental', 'etnia_indígena'
-]
-for feature in etnia_features:
-    input_data[feature] = 0
-
-# Mapeia a cor/raça selecionada
 cor_raca_mapping = {
-    "Branca": "etnia_branca",
-    "Preta": "etnia_preta",
-    "Parda": "etnia_parda",
     "Amarela/Oriental": "etnia_amarela/oriental",
+    "Branca": "etnia_branca",
     "Indígena": "etnia_indígena",
-    "Não informada": None
+    "Parda": "etnia_parda",
+    "Preta": "etnia_preta"
 }
-if cor_raca != "Não informada":
-    input_data[cor_raca_mapping[cor_raca]] = 1
-# Se "Não informada", todas as etnias permanecem como 0
+# Zera todas as etnias
+for etnia in cor_raca_mapping.values():
+    input_data[etnia] = 0
+# Seta a etnia selecionada
+input_data[cor_raca_mapping[cor_raca]] = 1
 
 # Bloco IV: Outras Informações
 st.header("Bloco IV - Outras Informações")
 bairro_risco = st.radio(
     "A vítima considera morar em área de risco?",
-    ["Sim", "Não", "Não sei"]
+    ["Sim", "Não"]
 )
 input_data['moradia_violencia'] = 1 if bairro_risco == "Sim" else 0
 
