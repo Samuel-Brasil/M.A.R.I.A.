@@ -28,23 +28,26 @@ if not os.path.exists(model_filename):
 
 
 with st.sidebar:
-    img1a = 'https://campus.paho.org/sites/default/files/webfiles/logos/harvard-mit-logos.jpg'
-    img_head = [img1a]
-    st.image(img_head, width=300)
-    st.markdown(f'<div><span style="color:#750014; font-size:40px; font-weight:bold;">Bench</span><span style="color:#8b959e; font-size:40px; font-weight:bold;">Mark</span></div>', unsafe_allow_html=True)
+#    img1a = 'https://campus.paho.org/sites/default/files/webfiles/logos/harvard-mit-logos.jpg'
+#    img_head = [img1a]
+#    st.image(img_head, width=300)
+    st.markdown(f'<div><span style="color:#750014; font-size:40px; font-weight:bold;">M.A.R.I.A.</span></div>', unsafe_allow_html=True)
 #    st.divider()
     st.write('#### Principal Investigators:')
 #    img2 = 'https://radcliffe-harvard-edu.imgix.net/67a0f0b5-89c8-49ea-9565-ed9b7294a078/Minow-Martha_9123_radcliffe-TR.jpg?auto=compress%2Cformat&fit=min&fm=jpg&q=80&rect=257%2C486%2C1829%2C1819'
 #    img3 = 'https://pbs.twimg.com/profile_images/1349456113046056961/j0BvBsaT_400x400.jpg'
 #    images = [img2, img3]
 #    st.image(images, width=64, caption=["Martha Minow", "Deb Roy"])
-    st.write('Martha Minow, Deb Roy')
-    st.write('Team:', 'Sam Brasil, Denny Lee, Suyash Fulay')
+    st.write('Samuel Brasil')
 
-    # Getting the user's email
-#    user_email = st.experimental_user.email
-#    st.write(user_email)
-
+    
+# Realiza a previsão ao clicar no botão
+if st.button('Prever'):
+    prediction, probability = predict_decision(input_data)
+    if prediction:
+        st.success(f"O modelo prevê que a medida protetiva será **CONCEDIDA** com probabilidade de {probability:.2f}.")
+    else:
+        st.error(f"O modelo prevê que a medida protetiva será **NEGADA** com probabilidade de {1 - probability:.2f}.")
 
     # Add a selection box for model choice
     st.write('#### Model Selection:')
