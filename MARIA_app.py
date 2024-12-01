@@ -5,6 +5,11 @@ import numpy as np
 import pandas as pd
 import requests
 
+
+## Head
+st.set_page_config(layout="wide")
+
+
 model_filename = 'best_model.joblib'
 
 if not os.path.exists(model_filename):
@@ -21,10 +26,6 @@ if not os.path.exists(model_filename):
             st.error('Falha ao baixar o modelo.')
             st.stop()
 
-
-
-## Head
-st.set_page_config(layout="wide")
 
 with st.sidebar:
     img1a = 'https://campus.paho.org/sites/default/files/webfiles/logos/harvard-mit-logos.jpg'
