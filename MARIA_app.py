@@ -45,15 +45,7 @@ This app predicts whether a protective measure will be granted based on the inpu
 st.header("Informação das Partes")
 # Coleta das informações de idade
 idade_vitima = st.number_input("Idade da vítima", min_value=0, value=30, step=1)
-escolaridade_vitima = st.selectbox(
-    "Escolaridade da vítima",
-    ["Nihil", "Fundamental", "Médio", "Superior", "Pós-graduação", "Mestrado", "Doutorado"]
-)
 idade_agressor = st.number_input("Idade do(a) agressor(a)", min_value=0, value=30, step=1)
-escolaridade_agressor = st.selectbox(
-    "Escolaridade do(a) agressor(a)",
-    ["Nihil", "Fundamental", "Médio", "Superior", "Pós-graduação", "Mestrado", "Doutorado"]
-)
 vinculo = st.text_input("Vínculo entre a vítima e o(a) agressor(a)")
 data = st.date_input("Data")
 
@@ -63,8 +55,6 @@ input_data = {}
 # Idades (ajustando os nomes das colunas)
 input_data['idade_vit'] = idade_vitima
 input_data['idade_agr'] = idade_agressor
-
-# As variáveis de escolaridade não estão presentes no dataset, portanto, não serão incluídas em input_data
 
 # Bloco I: Sobre o Histórico de Violência
 st.header("Bloco I - Sobre o Histórico de Violência")
@@ -82,21 +72,63 @@ agressoes_fisicas = st.multiselect(
     ["Queimadura", "Enforcamento", "Sufocamento", "Tiro", "Afogamento",
      "Facada", "Paulada", "Nenhuma das agressões acima"]
 )
-agressoes_fisicas_options = ["Afogamento", "Enforcamento", "Facada", "Paulada",
-                             "Queimadura", "Sufocamento", "Tiro", "Nenhuma das agressões acima"]
-for ag in agressoes_fisicas_options:
-    key = f"a_graves_{ag}"
-    input_data[key] = 1 if ag in agressoes_fisicas else 0
+
+# Inicializa todas as agressões graves como 0 (excluding 'a_graves_nenhuma')
+a_graves_features = [
+    'a_graves_Afogamento', 'a_graves_Enforcamento', 'a_graves_Facada',
+    'a_graves_Paulada', 'a_graves_Queimadura',
+    'a_graves_Sufocamento', 'a_graves_Tiro'
+]
+for feature in a_graves_features:
+    input_data[feature] = 0
+
+# Mapeia as agressões selecionadas
+if "Nenhuma das agressões acima" in agressoes_fisicas:
+    # Se "Nenhuma das agressões acima" foi selecionada, todas as agressões graves permanecem como 0
+    pass
+else:
+    mapping_agressoes_graves = {
+        "Afogamento": 'a_graves_Afogamento',
+        "Enforcamento": 'a_graves_Enforcamento',
+        "Facada": 'a_graves_Facada',
+        "Paulada": 'a_graves_Paulada',
+        "Queimadura": 'a_graves_Queimadura',
+        "Sufocamento": 'a_graves_Sufocamento',
+        "Tiro": 'a_graves_Tiro'
+    }
+    for ag in agressoes_fisicas:
+        if ag in mapping_agressoes_graves:
+            input_data[mapping_agressoes_graves[ag]] = 1
 
 # Outras agressões físicas
 outros_agressoes = st.multiselect(
     "O(A) agressor(a) já praticou alguma(s) destas outras agressões físicas contra a vítima?",
     ["Socos", "Chutes", "Tapas", "Empurrões", "Puxões de Cabelo", "Nenhuma das agressões acima"]
 )
-outros_agressoes_options = ["Socos", "Chutes", "Tapas", "Empurrões", "puxoes_cabelo", "Nenhuma das agressões acima"]
-for ag in outros_agressoes_options:
-    key = f"agressoes_{ag}"
-    input_data[key] = 1 if ag in outros_agressoes else 0
+
+# Inicializa todas as outras agressões como 0 (excluding 'agressoes_nenhuma')
+agressoes_features = [
+    'agressoes_Chutes', 'agressoes_Empurrões',
+    'agressoes_puxoes_cabelo', 'agressoes_Socos', 'agressoes_Tapas'
+]
+for feature in agressoes_features:
+    input_data[feature] = 0
+
+# Mapeia as outras agressões selecionadas
+if "Nenhuma das agressões acima" in outros_agressoes:
+    # Se "Nenhuma das agressões acima" foi selecionada, todas as outras agressões permanecem como 0
+    pass
+else:
+    mapping_outros_agressoes = {
+        "Socos": 'agressoes_Socos',
+        "Chutes": 'agressoes_Chutes',
+        "Tapas": 'agressoes_Tapas',
+        "Empurrões": 'agressoes_Empurrões',
+        "Puxões de Cabelo": 'agressoes_puxoes_cabelo'
+    }
+    for ag in outros_agressoes:
+        if ag in mapping_outros_agressoes:
+            input_data[mapping_outros_agressoes[ag]] = 1
 
 # Obrigação de sexo
 obrigou_sexo = st.radio(
@@ -201,12 +233,6 @@ if tem_filhos != "Não":
     )
     input_data['vit_guarda_pensao'] = 1 if conflito_guarda == "Sim" else 0
 
-    filhos_deficiencia = st.radio(
-        "Algum filho tem deficiência?",
-        ["Sim", "Não"]
-    )
-    # Não há coluna específica para 'filhos_deficiencia', então não adicionamos ao input_data
-
 violencia_gravidez = st.radio(
     "A vítima sofreu violência durante a gravidez ou pós-parto?",
     ["Sim", "Não"]
@@ -225,22 +251,32 @@ deficiencia_vulnerabilidade = st.radio(
 )
 input_data['vit_pne'] = 1 if deficiencia_vulnerabilidade == "Sim" else 0
 
+# Cor/Raça
 cor_raca = st.selectbox(
     "Com qual cor/raça a vítima se identifica?",
     ["Branca", "Preta", "Parda", "Amarela/Oriental", "Indígena", "Não informada"]
 )
+
+# Inicializa todas as etnias como 0
+etnia_features = [
+    'etnia_branca', 'etnia_preta', 'etnia_parda',
+    'etnia_amarela/oriental', 'etnia_indígena'
+]
+for feature in etnia_features:
+    input_data[feature] = 0
+
+# Mapeia a cor/raça selecionada
 cor_raca_mapping = {
     "Branca": "etnia_branca",
     "Preta": "etnia_preta",
     "Parda": "etnia_parda",
     "Amarela/Oriental": "etnia_amarela/oriental",
     "Indígena": "etnia_indígena",
-    "Não informada": "etnia_nao_informada"
+    "Não informada": None
 }
-for cor in cor_raca_mapping.values():
-    input_data[cor] = 0
 if cor_raca != "Não informada":
     input_data[cor_raca_mapping[cor_raca]] = 1
+# Se "Não informada", todas as etnias permanecem como 0
 
 # Bloco IV: Outras Informações
 st.header("Bloco IV - Outras Informações")
