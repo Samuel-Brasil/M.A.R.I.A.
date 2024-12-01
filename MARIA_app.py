@@ -28,9 +28,9 @@ if not os.path.exists(model_filename):
 
 
 with st.sidebar:
-#    img1a = 'https://campus.paho.org/sites/default/files/webfiles/logos/harvard-mit-logos.jpg'
-#    img_head = [img1a]
-#    st.image(img_head, width=300)
+    img1a = 'https://media.meer.com/attachments/6e0514895e44505c7b68e082756d61d8c7760249/store/fill/690/388/ec6748c00eb0c873c497eeb74a8c05aa270d7d0b1da90c41c2a3c4cf7ad4/Medusa-particolare-della-statua-di-Luciano-Garbati-Ogni-donna-e-attraente-finche-linvidia-e-la.jpg'
+    img_head = [img1a]
+    st.image(img_head, width=300)
     st.markdown(f'<div><span style="color:#750014; font-size:40px; font-weight:bold;">M.A.R.I.A.</span></div>', unsafe_allow_html=True)
 #    st.divider()
     st.write('#### Principal Investigators:')
