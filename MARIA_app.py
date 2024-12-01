@@ -26,15 +26,6 @@ if not os.path.exists(model_filename):
             st.error('Falha ao baixar o modelo.')
             st.stop()
 
-# Define a função de previsão
-def predict_decision(input_data):
-    # Converte os dados de entrada em um DataFrame com as colunas na ordem correta
-    input_df = pd.DataFrame([input_data], columns=expected_features)
-    # Faz a previsão
-    prediction = model.predict(input_df)
-    prediction_proba = model.predict_proba(input_df)
-    return prediction[0], prediction_proba[0][1]
-
 
 with st.sidebar:
 #    img1a = 'https://campus.paho.org/sites/default/files/webfiles/logos/harvard-mit-logos.jpg'
@@ -48,25 +39,6 @@ with st.sidebar:
 #    images = [img2, img3]
 #    st.image(images, width=64, caption=["Martha Minow", "Deb Roy"])
     st.write('Samuel Brasil')
-
-    
-    # Realiza a previsão ao clicar no botão
-    if st.button('Prever'):
-        prediction, probability = predict_decision(input_data)
-        if prediction:
-            st.success(f"O modelo prevê que a medida protetiva será **CONCEDIDA** com probabilidade de {probability:.2f}.")
-        else:
-            st.error(f"O modelo prevê que a medida protetiva será **NEGADA** com probabilidade de {1 - probability:.2f}.")
-
-    # Add a selection box for model choice
-    st.write('#### Model Selection:')
-    model_option = st.selectbox(
-        'Choose model',
-        ('gpt-4o', 'gpt-4o-mini', 'o1-preview', 'o1-mini', 'gemini-1.5-flash', 'gemini-1.5-pro', 'claude-3-5-haiku-latest', 'claude-3-5-sonnet-latest', 'Agentic GraphRAG (Sam)')
-    )
-
-
-
 
 
 
@@ -87,7 +59,14 @@ expected_features = ['idade_vit', 'idade_agr', 'historico_ameaca', 'sexo_forcado
 
 
 
-# lugar antigo
+# Define a função de previsão
+def predict_decision(input_data):
+    # Converte os dados de entrada em um DataFrame com as colunas na ordem correta
+    input_df = pd.DataFrame([input_data], columns=expected_features)
+    # Faz a previsão
+    prediction = model.predict(input_df)
+    prediction_proba = model.predict_proba(input_df)
+    return prediction[0], prediction_proba[0][1]
 
 
 # Layout do aplicativo Streamlit
@@ -304,9 +283,9 @@ input_data['dependencia_economica'] = 1 if dependencia_financeira == "Sim" else 
 st.header("Bloco V - Predição")
 
 # Realiza a previsão ao clicar no botão
-#if st.button('Prever'):
-#    prediction, probability = predict_decision(input_data)
-#    if prediction:
-#        st.success(f"O modelo prevê que a medida protetiva será **CONCEDIDA** com probabilidade de {probability:.2f}.")
-#    else:
-#        st.error(f"O modelo prevê que a medida protetiva será **NEGADA** com probabilidade de {1 - probability:.2f}.")
+if st.button('Prever'):
+    prediction, probability = predict_decision(input_data)
+    if prediction:
+        st.success(f"O modelo prevê que a medida protetiva será **CONCEDIDA** com probabilidade de {probability:.2f}.")
+    else:
+        st.error(f"O modelo prevê que a medida protetiva será **NEGADA** com probabilidade de {1 - probability:.2f}.")
