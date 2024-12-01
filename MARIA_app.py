@@ -71,7 +71,7 @@ def predict_decision(input_data):
 
 # Layout do aplicativo Streamlit
 # st.title('M.A.R.I.A.')
-st.title('Modelagem da Avaliação de Risco com Inteligência Artificial')
+st.header('Modelagem da Avaliação de Risco com Inteligência Artificial')
 
 st.write("""
 This app predicts whether a protective measure will be granted based on the input data.
