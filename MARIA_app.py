@@ -26,6 +26,15 @@ if not os.path.exists(model_filename):
             st.error('Falha ao baixar o modelo.')
             st.stop()
 
+# Define a função de previsão
+def predict_decision(input_data):
+    # Converte os dados de entrada em um DataFrame com as colunas na ordem correta
+    input_df = pd.DataFrame([input_data], columns=expected_features)
+    # Faz a previsão
+    prediction = model.predict(input_df)
+    prediction_proba = model.predict_proba(input_df)
+    return prediction[0], prediction_proba[0][1]
+
 
 with st.sidebar:
 #    img1a = 'https://campus.paho.org/sites/default/files/webfiles/logos/harvard-mit-logos.jpg'
@@ -76,14 +85,10 @@ expected_features = ['idade_vit', 'idade_agr', 'historico_ameaca', 'sexo_forcado
                      'a_graves_Queimadura', 'a_graves_Sufocamento', 'a_graves_Tiro', 'agressoes_Chutes',
                      'agressoes_Empurrões', 'agressoes_puxoes_cabelo', 'agressoes_Socos', 'agressoes_Tapas']
 
-# Define a função de previsão
-def predict_decision(input_data):
-    # Converte os dados de entrada em um DataFrame com as colunas na ordem correta
-    input_df = pd.DataFrame([input_data], columns=expected_features)
-    # Faz a previsão
-    prediction = model.predict(input_df)
-    prediction_proba = model.predict_proba(input_df)
-    return prediction[0], prediction_proba[0][1]
+
+
+# lugar antigo
+
 
 # Layout do aplicativo Streamlit
 st.title('M.A.R.I.A.')
