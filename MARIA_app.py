@@ -283,7 +283,7 @@ input_data['dependencia_economica'] = 1 if dependencia_financeira == "Sim" else 
 st.header("Bloco V - Predição")
 
 # Realiza a previsão ao clicar no botão
-if st.button('Prever'):
+if st.dialog('Prever'):
     prediction, probability = predict_decision(input_data)
     if prediction:
         st.success(f"O modelo prevê que a medida protetiva será **CONCEDIDA** com probabilidade de {probability:.2f}.")
