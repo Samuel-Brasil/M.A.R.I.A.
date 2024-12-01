@@ -21,6 +21,33 @@ if not os.path.exists(model_filename):
             st.error('Falha ao baixar o modelo.')
             st.stop()
 
+
+## Head
+st.set_page_config(layout="wide")
+
+with st.sidebar:
+    img1a = 'https://campus.paho.org/sites/default/files/webfiles/logos/harvard-mit-logos.jpg'
+    img_head = [img1a]
+    st.image(img_head, width=300)
+    st.markdown(f'<div><span style="color:#750014; font-size:40px; font-weight:bold;">Bench</span><span style="color:#8b959e; font-size:40px; font-weight:bold;">Mark</span></div>', unsafe_allow_html=True)
+#    st.divider()
+    st.write('#### Principal Investigators:')
+    st.write('Martha Minow, Deb Roy')
+    st.write('Team:', 'Sam Brasil, Denny Lee, Suyash Fulay')
+
+
+    # Add a selection box for model choice
+    st.write('#### Model Selection:')
+    model_option = st.selectbox(
+        'Choose model',
+        ('gpt-4o', 'gpt-4o-mini', 'o1-preview', 'o1-mini', 'gemini-1.5-flash', 'gemini-1.5-pro', 'claude-3-5-haiku-latest', 'claude-3-5-sonnet-latest', 'Agentic GraphRAG (Sam)')
+    )
+
+
+
+
+
+
 # Carrega o modelo
 model = joblib.load(model_filename)
 
