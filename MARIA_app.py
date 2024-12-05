@@ -33,7 +33,7 @@ with st.sidebar:
     st.image(img_head, width=300)
     st.markdown(f'<div><span style="color:#750014; font-size:40px; font-weight:bold;">M.A.R.I.A.</span></div>', unsafe_allow_html=True)
 #    st.divider()
-    st.write('#### Principal Investigators:')
+    st.write('#### Principal Investigator:')
 #    img2 = 'https://radcliffe-harvard-edu.imgix.net/67a0f0b5-89c8-49ea-9565-ed9b7294a078/Minow-Martha_9123_radcliffe-TR.jpg?auto=compress%2Cformat&fit=min&fm=jpg&q=80&rect=257%2C486%2C1829%2C1819'
 #    img3 = 'https://pbs.twimg.com/profile_images/1349456113046056961/j0BvBsaT_400x400.jpg'
 #    images = [img2, img3]
